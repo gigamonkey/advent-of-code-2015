@@ -6,6 +6,8 @@ puzzle = "yzbqklnj"
 
 h key = unpack . encode . hash . pack . (key ++) . show
 
-isCoin = ("00000" == ) . take 5
+isCoin' n = ((take n $ repeat '0') ==) . take n
 
-main = print $ head $ filter (\(i, h) -> isCoin h) $ map (\i -> (i, h puzzle i)) [0..]
+mine key = map (h key) [0 .. ]
+
+main = print $ head $ filter ((isCoin' 6) . snd) $ zip [0 ..] $ mine puzzle
