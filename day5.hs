@@ -1,9 +1,14 @@
+{-# LANGUAGE NoMonomorphismRestriction #-}
+
+import Control.Applicative
 import Data.List (group)
 import System.IO
 
 puzzle = openFile "day5.puzzle" ReadMode >>= hGetContents >>= return . lines
 
-(&&&) f g x = f x && g x
+foo fn fns a = foldl fn ((head fns) a) (map (\f -> f a) (tail fns))
+
+(&&&) a b = (&&) <$> a <*> b
 
 pairs [] = []
 pairs (x:[]) = []
@@ -17,15 +22,14 @@ nice = threeVowels &&& atLeastOneDoubled &&& noNaughty
 
 -- part 2
 
-doubled [] = False
-doubled (x:[]) = False
-doubled (x:xs) = (x `elem` tail xs) || (doubled xs)
+nonAdjacentDoubled [] = False
+nonAdjacentDoubled (x:[]) = False
+nonAdjacentDoubled (x:xs) = (x `elem` tail xs) || (nonAdjacentDoubled xs)
 
-doubledPair :: Eq a => [a] -> Bool
-doubledPair = doubled . pairs
+doubledPair = nonAdjacentDoubled . pairs
 
-separated (x:[]) = False
-separated (x:y:[]) = False
+separated (_:[]) = False
+separated (_:_:[]) = False
 separated (x:y:xs) = x == head xs || separated (y:xs)
 
 nice' = doubledPair &&& separated
