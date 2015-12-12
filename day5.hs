@@ -4,7 +4,7 @@ import Control.Applicative
 import Data.List (group)
 import System.IO
 
-puzzle = openFile "day5.puzzle" ReadMode >>= hGetContents >>= return . lines
+puzzle = openFile "puzzles/day5.puzzle" ReadMode >>= hGetContents >>= return . lines
 
 foo fn fns a = foldl fn ((head fns) a) (map (\f -> f a) (tail fns))
 

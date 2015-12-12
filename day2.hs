@@ -1,6 +1,6 @@
 import System.IO
 
-puzzle = openFile "day2.puzzle" ReadMode >>= hGetContents >>= return . lines
+puzzle = openFile "puzzles/day2.puzzle" ReadMode >>= hGetContents >>= return . lines
 
 dims :: String -> (Int, Int, Int)
 dims d = (read l, read w, read h) where
