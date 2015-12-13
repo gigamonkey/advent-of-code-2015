@@ -17,7 +17,7 @@ splitOn x xs = head : splitOn x thetail where
     (head, rest) = span (/= x) xs
     thetail = if null rest then [] else tail rest
 
-parse x = fromMaybe (error "No parse") (tryParse On "turn on " x <|> tryParse Off "turn off " x <|> tryParse Toggle "toggle " x)
+parse x = fromMaybe (error "No parse") (tryParse On "turn on" x <|> tryParse Off "turn off " x <|> tryParse Toggle "toggle " x)
 
 tryParse f p x = if p `isPrefixOf` x then Just $ f $ parseRest $ drop (length p) x else Nothing
 
@@ -43,11 +43,10 @@ run' = foldl eval M.empty where
     eval m (On s)     = foldl (\m' k -> M.insertWith (+) k 1 m') m (S.elems s)
     eval m (Off s)    = foldl (\m' k -> M.insertWith dim k 0 m') m (S.elems s)
     eval m (Toggle s) = foldl (\m' k -> M.insertWith (+) k 2 m') m (S.elems s)
-    dim :: Int -> Int -> Int
-    dim _ old = max 0 (old - 1)
+    dim _ = max 0 . (-) 1
 
-part1 = puzzle >>= print . (400410 ==) . S.size . run . map parse
+part1 = (400410 ==) . S.size . run . map parse
 
-part2 = puzzle >>= print . (M.foldl (+) 0) . run' . map parse
+part2 = (15343601 ==) . M.foldl (+) 0 . run' . map parse
 
-main = part2
+main = puzzle >>= print . part2
