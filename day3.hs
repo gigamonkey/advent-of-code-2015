@@ -10,7 +10,7 @@ visited = nub . scanl next (0, 0) where
     next (x, y) 'v' = (x, y - 1)
 
 everyOther [] = []
-everyOther (x : []) = [x]
+everyOther [x] = [x]
 everyOther (x : _ : xs) = x : everyOther xs
 
 santa = visited . everyOther

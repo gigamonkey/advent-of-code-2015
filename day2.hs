@@ -1,6 +1,7 @@
+import Control.Monad
 import System.IO
 
-puzzle = openFile "puzzles/day2.puzzle" ReadMode >>= hGetContents >>= return . lines
+puzzle = liftM lines (openFile "puzzles/day2.puzzle" ReadMode >>= hGetContents)
 
 dims :: String -> (Int, Int, Int)
 dims d = (read l, read w, read h) where
@@ -14,15 +15,15 @@ area (a, b) = a * b
 
 perimeter (a, b) = 2 * (a + b)
 
-paper ds = (2 * (sum ss)) + minimum ss where
+paper ds = (2 * sum ss) + minimum ss where
     ss = map area (sides ds)
 
 ribbon ds = minimum ps + volume ds where
     ps = map perimeter (sides ds)
 
-totalPaper = sum . (map (paper . dims))
+totalPaper = sum . map (paper . dims)
 
-totalRibbon = sum . (map (ribbon . dims))
+totalRibbon = sum . map (ribbon . dims)
 
 volume (l, w, h) = l * w * h
 

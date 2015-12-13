@@ -10,4 +10,4 @@ solve' (-1) i _ = i
 solve' n i ('(' : xs) = solve' (n + 1) (i + 1) xs
 solve' n i (')' : xs) = solve' (n - 1) (i + 1) xs
 
-main = puzzle >>= print . (solve' 0 0)
+main = puzzle >>= print . solve' 0 0
