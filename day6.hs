@@ -35,9 +35,9 @@ toggle lights toggle = turnOn (turnOff lights off) on where
     off = lights `intersection` toggle
     on  = toggle `difference` lights
 
-run xs = foldl foo Data.Set.empty xs where
+run = foldl foo Data.Set.empty where
     foo l (On s)     = turnOn l s
     foo l (Off s)    = turnOff l s
     foo l (Toggle s) = toggle l s
 
-main = do puzzle >>= print . size . run . (map parse)
+main = puzzle >>= print . (400410 ==) . size . run . map parse
