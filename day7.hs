@@ -91,7 +91,14 @@ evalAtom defs computed (Variable v) = fromMaybe (r, M.insert v r computed') mayb
 
 evalAtom _ m (Number i) = (i, m)
 
+part1 = run "a" . compile
+
+part2 = run "a" . rewire . compile where
+    rewire m = M.insert "b" (Value (Number (run "a" m))) m
+
+run v m =  fst $ evalAtom m M.empty (Variable v)
+
 main = do
   p <- puzzle
-  let m = compile p
-  print $ fst $ evalAtom m M.empty (Variable "a")
+  print $ part1 p
+  print $ part2 p
