@@ -27,5 +27,8 @@ pathLength ds path = foldl len 0 (pairs path) where
 main = do
   p <- puzzle
   let (Problem cities distances) = parse p
-  let shortest = minimumBy (comparing (pathLength distances)) (permutations cities)
-  print $ pathLength distances shortest
+  let len   = pathLength distances
+  let cmp   = comparing $ len
+  let paths = permutations cities
+  print $ len $ minimumBy cmp paths
+  print $ len $ maximumBy cmp paths
