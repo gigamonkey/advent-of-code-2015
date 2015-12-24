@@ -24,12 +24,11 @@ distance ds path = foldl len 0 (pairs path) where
 
 pair a b = if a < b then (a, b) else (b, a)
 
-main = do
-  p <- puzzle
-  let (Problem cities distances) = problem p
-  let len   = distance distances
-  let cmp   = comparing len
-  let paths = permutations cities
-  let max = len . maximumBy cmp
-  let min = len . minimumBy cmp
-  print $ (min paths, max paths)
+solve p = (min paths, max paths) where
+    Problem cities distances = problem p
+    paths = permutations cities
+    len   = distance distances
+    max   = len . maximumBy (comparing len)
+    min   = len . minimumBy (comparing len)
+
+main = puzzle >>= print . solve
