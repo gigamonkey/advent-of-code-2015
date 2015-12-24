@@ -4,7 +4,7 @@ import Data.Char
 
 start = "cqjxjnds"
 
-(&&&) a b = (&&) <$> a <*> b
+(.&&.) = liftA2 (&&)
 
 increment = reverse . rincrement . reverse where
     rincrement (x:xs) = if x == 'z' then 'a' : rincrement xs else chr (ord x + 1) : xs
@@ -21,7 +21,7 @@ twoPairs = (>= 2) . pairs 0 where
     pairs n [x] = n
     pairs n (x:y:xs) = if x == y then pairs (n + 1) xs else pairs n (y:xs)
 
-ok = threeStraight &&& noNumLike &&& twoPairs
+ok = threeStraight .&&. noNumLike .&&. twoPairs
 
 next s = head $ filter ok $ tail $ iterate increment s
 
