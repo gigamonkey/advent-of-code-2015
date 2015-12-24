@@ -8,7 +8,7 @@ start = "cqjxjnds"
 
 increment = reverse . rincrement . reverse
 
-rincrement (x:xs) = if x == 'z' then 'a' : rincrement xs else (chr $ ord x + 1) : xs
+rincrement (x:xs) = if x == 'z' then 'a' : rincrement xs else chr (ord x + 1) : xs
 
 straight []       = []
 straight [x]      = [x]
