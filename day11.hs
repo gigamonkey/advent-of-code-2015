@@ -6,29 +6,23 @@ start = "cqjxjnds"
 
 (&&&) a b = (&&) <$> a <*> b
 
-increment = reverse . rincrement . reverse
+increment = reverse . rincrement . reverse where
+    rincrement (x:xs) = if x == 'z' then 'a' : rincrement xs else chr (ord x + 1) : xs
 
-rincrement (x:xs) = if x == 'z' then 'a' : rincrement xs else chr (ord x + 1) : xs
+threeStraight = (>= 3) . straight where
+    straight []       = 0
+    straight [x]      = 1
+    straight (x:y:xs) = if ord x + 1 == ord y then max (1 + straight (y:xs)) (straight xs) else straight (y:xs)
 
-straight []       = []
-straight [x]      = [x]
-straight (x:y:xs) = if ord x + 1 == ord y then x : straight (y:xs) else [x]
+noNumLike = null . intersect "iol"
 
-threeStraight [] = False
-threeStraight xs = length (straight xs) >= 3 || threeStraight (tail xs)
+twoPairs = (>= 2) . pairs 0 where
+    pairs n [] = n
+    pairs n [x] = n
+    pairs n (x:y:xs) = if x == y then pairs (n + 1) xs else pairs n (y:xs)
 
-nonumlike = null . intersect "iol"
+ok = threeStraight &&& noNumLike &&& twoPairs
 
-pairs :: Ord a => Int -> [a] -> Int
-pairs n [] = n
-pairs n [x] = n
-pairs n (x:y:xs) = if x == y then pairs (n + 1) xs else pairs n (y:xs)
-
-twoPairs :: String -> Bool
-twoPairs = (>= 2) . pairs 0
-
-ok = threeStraight &&& nonumlike &&& twoPairs
-
-next s = head $ filter ok (tail (iterate increment s))
+next s = head $ filter ok $ tail $ iterate increment s
 
 main = putStrLn $ next $ next start
