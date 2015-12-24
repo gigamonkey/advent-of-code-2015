@@ -31,4 +31,4 @@ ok = threeStraight &&& nonumlike &&& twoPairs
 
 next s = head $ filter ok (tail (iterate increment s))
 
-main = putStrLn $ next start
+main = putStrLn $ next $ next start
