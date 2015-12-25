@@ -15,6 +15,6 @@ total (Array  a) = foldl (\acc v -> acc + total v) 0 a
 total (Number n) = n
 total _ = 0
 
-hasRed = foldl' (\acc v -> acc || v == "red") False
+hasRed = any (== "red") . elems
 
 main = puzzleJson >>= print . total
