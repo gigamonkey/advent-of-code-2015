@@ -31,14 +31,14 @@ labeled label = do { label; " "; n <- signed decimal; option ", "; return n }
 
 splits _ 0 = []
 splits n 1 = [[n]]
-splits n p = [ (i : rest) | i <- [0 .. n], rest <- splits (n - i) (p - 1) ]
+splits n p = [ i : rest | i <- [0 .. n], rest <- splits (n - i) (p - 1) ]
 
 fns = [ capacity, durability, flavor, texture ]
 
-score ingredients split = foldl (*) 1 (map (max 0 . combined) fns) where
-    combined f = foldl (\tot (amount, ingredient) -> tot + ((f ingredient) * amount)) 0 (zip split ingredients)
+score ingredients split = product (map (max 0 . combined) fns) where
+    combined f = foldl (\tot (amount, ingredient) -> tot + (f ingredient * amount)) 0 (zip split ingredients)
 
-cookieCalories ingredients split = foldl (\tot (amount, ingredient) -> tot + ((calories ingredient) * amount)) 0 (zip split ingredients)
+cookieCalories ingredients split = foldl (\tot (amount, ingredient) -> tot + (calories ingredient * amount)) 0 (zip split ingredients)
 
 main = do
   p <- puzzle

@@ -25,7 +25,7 @@ fact = do
   " happiness units by sitting next to "
   object <- name
   "."
-  return (pair subject object, (sign amount))
+  return (pair subject object, sign amount)
 
 name = star letter
 

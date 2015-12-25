@@ -13,7 +13,7 @@ puzzle = fold (input "puzzles/day14.puzzle") F.list
 duration = 2503
 
 fact = do
-  name <- (star letter)
+  name <- star letter
   " can fly "
   speed <- decimal
   " km/s for "
@@ -29,7 +29,7 @@ distance n (Reindeer name speed flyTime restTime) = (name, dist) where
     lastFlight = min flyTime left
     dist       = ((rounds * flyTime) + lastFlight) * speed
 
-reindeer p = map (head . match fact) p
+reindeer = map (head . match fact)
 
 race reindeer = [ map (distance s) reindeer | s <- [1..duration] ]
 
