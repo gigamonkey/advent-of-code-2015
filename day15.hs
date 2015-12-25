@@ -27,7 +27,7 @@ ingredient = do
   cal  <- labeled "calories"
   return (Ingredient name c d f t cal)
 
-labeled label = do { label; " "; n <- signed decimal; option ", "; return n }
+labeled label = label *> " " *> signed decimal <* option ", "
 
 splits _ 0 = []
 splits n 1 = [[n]]
