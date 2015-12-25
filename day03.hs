@@ -1,7 +1,7 @@
 import Data.List
 import System.IO
 
-puzzle = openFile "puzzles/day3.puzzle" ReadMode >>= hGetContents
+puzzle = openFile "puzzles/day03.puzzle" ReadMode >>= hGetContents
 
 visited = nub . scanl next (0, 0) where
     next (x, y) '<' = (x - 1, y)

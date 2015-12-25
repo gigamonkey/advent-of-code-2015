@@ -4,7 +4,7 @@ import Turtle
 import qualified Control.Foldl as F
 import qualified Data.Text as T
 
-puzzle = input "puzzles/day8.puzzle"
+puzzle = input "puzzles/day08.puzzle"
 
 codeCharacters = T.length
 

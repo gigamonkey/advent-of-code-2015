@@ -5,7 +5,7 @@ import Control.Monad
 import Data.List (group)
 import System.IO
 
-puzzle = liftM lines (openFile "puzzles/day5.puzzle" ReadMode >>= hGetContents)
+puzzle = liftM lines (openFile "puzzles/day05.puzzle" ReadMode >>= hGetContents)
 
 foo fn fns a = foldl fn (head fns a) (map (\f -> f a) (tail fns))
 

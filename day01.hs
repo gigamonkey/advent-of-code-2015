@@ -1,6 +1,6 @@
 import System.IO
 
-puzzle = openFile "puzzles/day1.puzzle" ReadMode >>= hGetContents
+puzzle = openFile "puzzles/day01.puzzle" ReadMode >>= hGetContents
 
 solve n [] = n
 solve n ('(' : xs) = solve (n + 1) xs

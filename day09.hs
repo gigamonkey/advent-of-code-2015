@@ -9,7 +9,7 @@ import qualified Data.Map.Strict as M
 
 data Problem = Problem [String] (M.Map (String, String) Int)
 
-puzzle = fold (input "puzzles/day9.puzzle") F.list
+puzzle = fold (input "puzzles/day09.puzzle") F.list
 
 problem p = Problem cities distances where
     edges     = map (head . match edge) p

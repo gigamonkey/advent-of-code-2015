@@ -10,7 +10,7 @@ type Lights = S.Set (Int, Int)
 
 data Op = On Lights | Off Lights | Toggle Lights deriving (Show)
 
-puzzle = liftM lines (openFile "puzzles/day6.puzzle" ReadMode >>= hGetContents)
+puzzle = liftM lines (openFile "puzzles/day06.puzzle" ReadMode >>= hGetContents)
 
 splitOn x [] = []
 splitOn x xs = head : splitOn x thetail where

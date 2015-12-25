@@ -21,7 +21,7 @@ data Expr = Value Atom
           | Lshift Atom Int
             deriving (Show)
 
-puzzle = liftM (map T.pack . lines) (openFile "puzzles/day7.puzzle" ReadMode >>= hGetContents)
+puzzle = liftM (map T.pack . lines) (openFile "puzzles/day07.puzzle" ReadMode >>= hGetContents)
 
 identifier = plus letter
 
