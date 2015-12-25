@@ -2,7 +2,6 @@
 
 import Turtle
 import Data.List (nub, permutations, minimumBy, maximumBy)
-import Data.Maybe (fromJust)
 import Data.Ord (comparing)
 import qualified Control.Foldl as F
 
@@ -21,10 +20,10 @@ fact = do
   " seconds."
   return (Reindeer name speed flyTime restTime)
 
-distance n (Reindeer name speed flyTime restTime) = (name, d) where
+distance n (Reindeer name speed flyTime restTime) = (name, dist) where
     rounds     = n `div` (flyTime + restTime)
     left       = n - (rounds * (flyTime + restTime))
     lastFlight = min flyTime left
-    d          = ((rounds * flyTime) + lastFlight) * speed
+    dist       = ((rounds * flyTime) + lastFlight) * speed
 
 main = puzzle >>= print . maximumBy (comparing snd) . map (distance 2503 . head . match fact)
