@@ -7,6 +7,8 @@ import Turtle
 import qualified Control.Foldl as F
 import qualified Data.Map.Strict as M
 
+data Boolean = True | False
+
 data Problem = Problem [String] (M.Map (String, String) Int)
 
 puzzle = fold (input "puzzles/day09.puzzle") F.list
