@@ -10,9 +10,11 @@ puzzle = B.readFile "puzzles/day12.puzzle"
 
 puzzleJson = liftM (fromJust . decode) puzzle
 
-total (Object o) = foldl' (\acc v -> acc + total v) 0 o
+total (Object o) = if hasRed o then 0 else foldl' (\acc v -> acc + total v) 0 o
 total (Array  a) = foldl (\acc v -> acc + total v) 0 a
 total (Number n) = n
 total _ = 0
+
+hasRed = foldl' (\acc v -> acc || v == "red") False
 
 main = puzzleJson >>= print . total
