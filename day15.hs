@@ -38,7 +38,9 @@ fns = [ capacity, durability, flavor, texture ]
 score ingredients split = foldl (*) 1 (map (max 0 . combined) fns) where
     combined f = foldl (\tot (amount, ingredient) -> tot + ((f ingredient) * amount)) 0 (zip split ingredients)
 
+cookieCalories ingredients split = foldl (\tot (amount, ingredient) -> tot + ((calories ingredient) * amount)) 0 (zip split ingredients)
+
 main = do
   p <- puzzle
   let ingredients = map (head . match ingredient) p
-  print $ maximum $ map (score ingredients) (splits 100 (length ingredients))
+  print $ maximum $ map (score ingredients) (filter ((== 500) . cookieCalories ingredients) (splits 100 (length ingredients)))
