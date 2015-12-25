@@ -7,8 +7,6 @@ import Data.Ord (comparing)
 import qualified Control.Foldl as F
 import qualified Data.Map.Strict as M
 
-data Fact = Fact Text Text Int deriving (Show)
-
 data Problem = Problem [Text] (M.Map (Text, Text) Int) deriving (Show)
 
 puzzle = fold (input "puzzles/day13.puzzle") F.list
@@ -40,12 +38,12 @@ score h seating = foldl sum 0 pairs where
     loop         = cycle seating
     sum d (a, b) = d + fromJust (M.lookup (pair a b) h)
 
-solve p = (min paths, max paths) where
-    Problem people happiness = problem p
+solve (Problem people happiness) = max paths where
     paths = permutations people
     s     = score happiness
     max   = s . maximumBy (comparing s)
-    min   = s . minimumBy (comparing s)
 
+addMe (Problem people happiness) = Problem ("Me" : people) newH where
+    newH = foldl (\m p -> M.insert p 0 m) happiness (map (pair "Me") people)
 
-main = puzzle >>= print . solve
+main = puzzle >>= print . solve . addMe . problem
