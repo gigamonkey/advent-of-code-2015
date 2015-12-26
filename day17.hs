@@ -15,4 +15,6 @@ ways 0 _      = [[]]
 ways _ []     = []
 ways n (x:xs) = [ x : tails | tails <- ways (n - x) xs ] ++ ways n xs
 
-main = print $ length $ ways eggnog sizes
+main = print $ length $ filter ((== fewest) . length) allways where
+    allways = ways eggnog sizes
+    fewest = minimum $ map length allways
