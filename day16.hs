@@ -32,6 +32,7 @@ aunt = do
 
 labeled label = do { l <- text label; ": "; n <- decimal; return (l, n) }
 
-ok (AuntSue n c) = all (\(l, n) -> fromMaybe True ((M.lookup l c) >>= (\x -> Just (x == n)))) matching
+ok (AuntSue n c) = all matchingCharacteristic matching where
+    matchingCharacteristic (l, n) = fromMaybe True (M.lookup l c >>= Just . (== n))
 
 main = puzzle >>= print . number . head . (filter ok) . map (head . match aunt)
