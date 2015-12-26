@@ -1,3 +1,5 @@
+W =
+
 hlint := /Users/peter/Library/Haskell/bin/hlint
 
 source = $(wildcard *.hs)
@@ -20,4 +22,4 @@ tidy:
 	rm -f *~
 
 %: %.hs
-	stack ghc -- -O2 -W $<
+	stack ghc -- -O2 -W$(W) $<
