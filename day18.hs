@@ -16,10 +16,15 @@ nextCell m p = alive (m ! p) where
     alive x = count == 3 || (x && count == 2)
     count   = countOn (neighbors m p)
 
-nextState m = fromList (nrows m) (ncols m) [ nextCell m (x, y) | x <- [1 .. nrows m], y <- [1 .. ncols m] ]
+stickyCorners m p f = isCorner p || f m p where
+    isCorner = (flip elem) [ (x, y) | x <- [1, nrows m], y <- [1, ncols m]]
+
+nextState m = fromList (nrows m) (ncols m) [ stickyCorners m (x, y) nextCell | x <- [1 .. nrows m], y <- [1 .. ncols m] ]
+
+stickCorners m = fromList (nrows m) (ncols m) [ stickyCorners m (x, y) (!) | x <- [1 .. nrows m], y <- [1 .. ncols m] ]
 
 play m = iterate nextState m
 
 on m = countOn [ m ! (x, y) | x <- [1 .. nrows m], y <- [1 .. ncols m] ]
 
-main = puzzle >>= print . on . (!! 100) . play . board
+main = puzzle >>= print . on . (!! 100) . play . stickCorners . board
