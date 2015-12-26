@@ -20,4 +20,4 @@ tidy:
 	rm -f *~
 
 %: %.hs
-	stack ghc -- -O2 $<
+	stack ghc -- -O2 -W $<
