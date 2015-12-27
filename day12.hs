@@ -2,19 +2,19 @@
 
 import Control.Monad
 import Data.Aeson
-import Data.HashMap.Strict
+import qualified Data.HashMap.Strict as HM
 import Data.Maybe
 import qualified Data.ByteString.Lazy as B
-
-puzzle = B.readFile "puzzles/day12.puzzle"
+import qualified Data.Vector as V
+puzzle = B.readFile "d12.json"
 
 puzzleJson = liftM (fromJust . decode) puzzle
 
-total (Object o) = if hasRed o then 0 else foldl' (\acc v -> acc + total v) 0 o
-total (Array  a) = foldl (\acc v -> acc + total v) 0 a
+total (Object o) = if hasRed o then 0 else sum $ HM.map total o
+total (Array  a) = sum $ V.map total a 
 total (Number n) = n
 total _ = 0
 
-hasRed = elem "red" . elems
+hasRed = elem "red" . HM.elems
 
 main = puzzleJson >>= print . total
