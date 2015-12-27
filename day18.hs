@@ -1,8 +1,7 @@
 import Control.Monad
 import Data.Matrix
-import System.IO
 
-puzzle = liftM lines (openFile "puzzles/day18.puzzle" ReadMode >>= hGetContents)
+puzzle = liftM lines (readFile "puzzles/day18.puzzle")
 
 board p = fromLists $ map (map (== '#')) p
 

@@ -4,13 +4,12 @@ import Data.List (isPrefixOf, null)
 import qualified Data.Map.Strict as M
 import Data.Maybe
 import qualified Data.Set as S
-import System.IO
 
 type Lights = S.Set (Int, Int)
 
 data Op = On Lights | Off Lights | Toggle Lights deriving (Show)
 
-puzzle = liftM lines (openFile "puzzles/day06.puzzle" ReadMode >>= hGetContents)
+puzzle = liftM lines (readFile "puzzles/day06.puzzle")
 
 splitOn x [] = []
 splitOn x xs = head : splitOn x thetail where

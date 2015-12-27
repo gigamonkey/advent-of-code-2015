@@ -1,10 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-import System.IO.Unsafe
 import Control.Monad
 import Data.Bits
 import Data.Maybe
-import System.IO
 import Turtle
 import qualified Data.Map.Strict as M
 import qualified Data.Text as T
@@ -21,7 +19,7 @@ data Expr = Value Atom
           | Lshift Atom Int
             deriving (Show)
 
-puzzle = liftM (map T.pack . lines) (openFile "puzzles/day07.puzzle" ReadMode >>= hGetContents)
+puzzle = liftM (map T.pack . lines) (readFile "puzzles/day07.puzzle")
 
 identifier = plus letter
 
