@@ -5,40 +5,40 @@ import Data.List
 import Data.Numbers.Primes
 import Turtle (options, argInt)
 import qualified Data.Map.Strict as M
+import qualified Data.Vector as V
 
 type Tree = M.Map Int [Int]
 
 answer = 665280
 
-puzzle :: Int
 puzzle = 2900000
 
-divisors xs p = sort $ nub $ (*) <$> xs <*> [1, p]
+takeInclusive p = (\(a, b) -> a ++ [ head b ]) . span p
 
-start :: Tree
-start = M.fromList [(1, [1])]
+divisors p xs = sort $ nub $ (*) <$> xs <*> [1, p]
 
-fill limit (upper, m) [] = (upper, m)
-fill limit (upper, m) (p:ps) = if isFull next then next else recur next ps where
-    next = update limit (upper, m) p
-    recur = fill limit
+powers p = takeInclusive ((<= puzzle) . sum . snd) . iterate step where
+    step = (,) <$> (p *) . fst <*> (divisors p) . snd
 
-isFull (upper, m) = sort (M.keys m) == [1..upper]
+start = M.fromList $ powers 2 (1, [1])
 
-update limit (upper, m) p = foldl (updatePower limit p) (upper, m) (M.assocs m)
+addPower m p = M.fromList $ takeInclusive ((<= puzzle) . sum . snd) $ sort next where
+    next    = [ x | c <- sort $ M.assocs m, x <- takeWhile ((<= upper) . fst) $ powers p c ]
+    upper   = maximum $ M.keys m
 
-updatePower limit p (upper, m) (k, v) = if sum v >= limit then (upper, m) else (if sum v' >= limit then next else recur next (k', v')) where
-    k'     = k * p
-    v'     = divisors v p
-    upper' = if sum v' > limit then k' else upper
-    next   = if k' > upper then (upper, m) else (upper', M.filterWithKey (needed upper' p) (M.insert k' v' m))
-    recur  = updatePower limit p
+addPowers = foldl addPower start
 
-needed upper p k _ = k <= upper && (k * p) <= upper
+addPowers' m (p:ps) = if m == next then m else addPowers' next ps where
+    next = addPower m p
 
-up = update puzzle
+findFirst m = fst $ head $ filter ((>= puzzle) . sum . snd) $ sort $ M.assocs m
 
-main :: IO ()
+bar m (p:ps) = ((p, maximum $ M.keys next, M.size next - M.size m), next) : bar next ps where
+    next = addPower m p
+
+foo m p = (length [ x | c <- sort $ M.assocs m, x <- takeWhile ((<= upper) . fst) $ powers p c ])  - (length $ M.elems m) where
+    upper = maximum $ M.keys m
+
 main = do
-  n <- options "Foo" (argInt  "min" "Minimum number of presents")
-  print $ n
+  print $ addPowers (take 10 primes)
+  print $ addPowers' start (take 10 primes)
