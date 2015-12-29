@@ -1,7 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+import Data.List (find)
+import Data.Maybe (fromJust)
 import Turtle (options, argInt)
-import Data.List
 
 presents :: [Int]
 presents = foldr combine zeros [ elf n | n <- [1 .. ] ] where
@@ -11,5 +12,5 @@ presents = foldr combine zeros [ elf n | n <- [1 .. ] ] where
 
 main :: IO ()
 main = do
-  n <- options "Foo" (argInt  "min" "Minimum number of presents")
-  print $ find ((>= n) . snd) (zip [1..] presents)
+  n <- options "Advent of Code, day 20 solver" (argInt  "min" "Minimum number of presents")
+  print $ fst $ fromJust $ find ((>= n) . snd) (zip [1..] presents)
