@@ -33,7 +33,7 @@ boss = Player 8 2 109
 
 playerWins p1 p2 = b <= 0 where
     (_, b) = last $ takeInclusive (\(a, b) -> a > 0 && b > 0) $ fight (hitPoints p1) (hitPoints p2) (attacks p1 p2)
-    attacks p1 p2 = cycle [damage p1 - armor p2, damage p2 - armor p1]
+    attacks p1 p2 = cycle [max 1 (damage p1 - armor p2), max 1 (damage p2 - armor p1)]
 
 fight h1 h2 (a1:a2:as) = (h1, h2') : (h1', h2') : fight h1' h2' as where
     h2' = h2 - a1
