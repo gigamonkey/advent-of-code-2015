@@ -47,4 +47,10 @@ best = find (\(c, d, a) -> playerWins (Player d a 100) boss) $ sort $ map choice
     choice es = foldl' step (0, 0, 0) es
     step (c, d, a) (Equipment _ cost damage armor) = (c + cost, d + damage, a + armor)
 
-main = print $ best
+worst = find (\(c, d, a) -> not $ playerWins (Player d a 100) boss) $ reverse $ sort $ map choice choices where
+    choice es = foldl' step (0, 0, 0) es
+    step (c, d, a) (Equipment _ cost damage armor) = (c + cost, d + damage, a + armor)
+
+main = do
+  print $ best
+  print $ worst
