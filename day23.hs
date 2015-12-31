@@ -3,10 +3,9 @@
 import Turtle
 import qualified Data.Vector as V
 import qualified Control.Foldl as F
+import Control.Monad
 
 data CPU = CPU { registerA :: Int, registerB :: Int, pc :: Int } deriving (Show)
-
-type Op = CPU -> CPU
 
 reboot = CPU 0 0 0
 
@@ -17,14 +16,14 @@ jump offset cpu        = cpu { pc = pc cpu + offset }
 condJump fn offset cpu = jump (if fn cpu then offset else 1) cpu
 
 -- op combinators
-regOp label fn = label *> " " *> choice [ra, rb] >>= return . (\r -> (r fn . jump 1)) where
+regOp label fn = liftM (\r -> r fn . jump 1) $ label *> " " *> choice [ra, rb] where
     ra = "a" *> return setA
     rb = "b" *> return setB
 
-jmpOp label fn = label *> " " *> signed decimal >>= return . fn
+jmpOp label fn = liftM fn $ label *> " " *> signed decimal
 
 jmpOpR label fn = op <$> (label *> " " *> reg <* ", ") <*> offset where
-    op r o = condJump (fn . r) o
+    op r   = condJump (fn . r)
     reg    = choice [ra, rb]
     offset = signed decimal
     ra     = "a" *> return registerA
@@ -42,9 +41,9 @@ ops = [ regOp "hlf" (`div` 2)
 compile xs = V.fromList $ map (head . match (choice ops)) xs
 
 run cpu prog = cpu : (if halted then [] else run nextCPU prog) where
-    halted = (pc cpu) < 0 || (pc cpu) >= V.length prog
+    halted  = pc cpu < 0 || pc cpu >= V.length prog
     nextCPU = op cpu
-    op      = prog V.! (pc cpu)
+    op      = prog V.! pc cpu
 
 puzzle = fold (input "puzzles/day23.puzzle") F.list
 
