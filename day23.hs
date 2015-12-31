@@ -47,4 +47,7 @@ run cpu prog = cpu : (if halted then [] else run nextCPU prog) where
 
 puzzle = fold (input "puzzles/day23.puzzle") F.list
 
-main = puzzle >>= print . registerB . last . run reboot . compile
+main = do
+  p <- puzzle
+  (print . registerB . last . run reboot . compile) p
+  (print . registerB . last . run (CPU 1 0 0) . compile) p
