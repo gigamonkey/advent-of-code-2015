@@ -44,7 +44,9 @@ effects Poison = returning Poison $ id : (take 6 $ repeat (\s -> s { bossHitPoin
 -- each turn while it is active, it gives you
 effects Recharge = returning Recharge $ id : (take 5 $ repeat (\s -> s { playerMana = playerMana s + 101 }))
 
-returning spell fns = init fns ++ [ last fns . (\s -> s { spells = spell : spells s }) ]
+returning spell [fn] = [ fn . (\s -> s { spells = spell : spells s }) ]
+returning spell xs = reverse $ (take 1 rxs) ++ [ (head $ drop 1 rxs) . (\s -> s { spells = spell : spells s }) ]  ++ (drop 2 rxs) where
+    rxs = reverse xs
 
 takeInclusive p = (\(a, b) -> a ++ take 1 b) . span p
 
@@ -70,7 +72,7 @@ search state paid best
     | otherwise                  = trySpells affordable best
     where
       affordable         = filter ((<= (playerMana state)) . cost) $ spells state
-      minusOne state     = state { playerHitPoints = playerHitPoints state - 1 }
+      --minusOne           = state { playerHitPoints = playerHitPoints state - 1 }
       trySpells [] b     = b
       trySpells (s:ss) b = maybeMin b (trySpells ss (if maybe False (paid >) b then b else next s b))
       next s b           = search (bossAttack (cast s state)) (paid + (cost s)) b
@@ -97,16 +99,5 @@ applyEffects :: State -> State
 applyEffects state = foldl (&) updated now where
     (now, later) = heads (currentEffects state)
     updated = state { currentEffects = later }
-
--- Scratch
-
-search1 :: State -> Spell -> State
-search1 state spell = bossAttack (cast spell state)
-
-search' s | bossHitPoints s <= 0 = [s]
-          | playerHitPoints s <= 0 = [s]
-          | otherwise = s : [ s' | spell <- affordable s, s' <- search' (bossAttack (cast spell s)) ]
-          where
-            affordable s = filter ((< (playerMana s)) . cost) $ spells s
 
 main = print $ search start 0 Nothing
