@@ -11,11 +11,11 @@ replacements = map (head . match p) `fmap` fold (input "puzzles/day19.replacemen
 
 start = (unpack . head) `fmap` fold (input "puzzles/day19.start") F.list
 
-allReplacements rs s = nub [ replace f t a b | (f, t) <- rs, (a, b) <- splits, isPrefixOf f b ] where
+allReplacements rs s = nub [ replace f t a b | (f, t) <- rs, (a, b) <- splits, f `isPrefixOf` b ] where
     replace f t a b = a ++ t ++ drop (length f) b
     splits = zip (inits s) (tails s)
 
-generate rs (steps, molecule) = nextstep ++ (concatMap (generate rs) nextstep) where
+generate rs (steps, molecule) = nextstep ++ concatMap (generate rs) nextstep where
     nextstep = nub [ (steps + 1, next) | next <- allReplacements rs molecule ]
 
 search molecule = Data.List.find ((== molecule) . snd)

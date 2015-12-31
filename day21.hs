@@ -1,4 +1,3 @@
-import Control.Applicative
 import Data.List
 
 data Player = Player { damage :: Int, armor :: Int, hitPoints :: Int } deriving (Show, Eq)
@@ -43,14 +42,14 @@ choices = foldl' cross [[]] [ choose 1 1 weapons, choose 0 1 armors, choose 0 2 
     choose n m = filter ((\x -> n <= x && x <= m) . length) . subsequences
     cross a b = (++) <$> a <*> b
 
-best = find (\(c, d, a) -> playerWins (Player d a 100) boss) $ sort $ map choice choices where
-    choice es = foldl' step (0, 0, 0) es
+best = find (\(_, d, a) -> playerWins (Player d a 100) boss) $ sort $ map choice choices where
+    choice = foldl' step (0, 0, 0)
     step (c, d, a) (Equipment _ cost damage armor) = (c + cost, d + damage, a + armor)
 
-worst = find (\(c, d, a) -> not $ playerWins (Player d a 100) boss) $ reverse $ sort $ map choice choices where
-    choice es = foldl' step (0, 0, 0) es
+worst = find (\(_, d, a) -> not $ playerWins (Player d a 100) boss) $ sortBy (flip compare) $ map choice choices where
+    choice = foldl' step (0, 0, 0)
     step (c, d, a) (Equipment _ cost damage armor) = (c + cost, d + damage, a + armor)
 
 main = do
-  print $ best
-  print $ worst
+  print best
+  print worst
