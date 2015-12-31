@@ -64,16 +64,16 @@ start = State { bossHitPoints   = 51
 
 search :: State -> Int -> Maybe Int -> Maybe Int
 search state paid best
-    | bossHitPoints state <= 0 = Just paid
+    | bossHitPoints state <= 0   = Just paid
     | playerHitPoints state <= 0 = Nothing
-    | otherwise = if null affordable then Nothing else foo state affordable paid best
+    | null affordable            = Nothing
+    | otherwise                  = trySpells affordable best
     where
-      affordable = filter ((<= (playerMana state)) . cost) $ spells state
-
-
-foo :: State -> [Spell] -> Int -> Maybe Int -> Maybe Int
-foo state [] p b = b
-foo state (s:ss) p b = maybeMin b (foo state ss p (if maybe False (p >) b then b else (search (bossAttack (cast s state)) (p + (cost s)) b)))
+      affordable         = filter ((<= (playerMana state)) . cost) $ spells state
+      minusOne state     = state { playerHitPoints = playerHitPoints state - 1 }
+      trySpells [] b     = b
+      trySpells (s:ss) b = maybeMin b (trySpells ss (if maybe False (paid >) b then b else next s b))
+      next s b           = search (bossAttack (cast s state)) (paid + (cost s)) b
 
 maybeMin :: Ord a => Maybe a -> Maybe a -> Maybe a
 maybeMin Nothing Nothing = Nothing
