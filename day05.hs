@@ -1,18 +1,14 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
-import Control.Applicative
 import Control.Monad
 import Data.List (group)
-import System.IO
 
-puzzle = liftM lines (openFile "puzzles/day05.puzzle" ReadMode >>= hGetContents)
-
-foo fn fns a = foldl fn (head fns a) (map (\f -> f a) (tail fns))
+puzzle = liftM lines $ readFile "puzzles/day05.puzzle"
 
 (&&&) a b = (&&) <$> a <*> b
 
 pairs [] = []
-pairs [x] = []
+pairs [_] = []
 pairs (x:y:xs) = [x,y] : pairs (y:xs)
 
 threeVowels       = (> 2) . length . filter (`elem` "aeiou")
@@ -24,7 +20,7 @@ nice = threeVowels &&& atLeastOneDoubled &&& noNaughty
 -- part 2
 
 nonAdjacentDoubled [] = False
-nonAdjacentDoubled [x] = False
+nonAdjacentDoubled [_] = False
 nonAdjacentDoubled (x:xs) = (x `elem` tail xs) || nonAdjacentDoubled xs
 
 doubledPair = nonAdjacentDoubled . pairs
@@ -35,4 +31,7 @@ separated (x:y:xs) = x == head xs || separated (y:xs)
 
 nice' = doubledPair &&& separated
 
-main = puzzle >>= print . length . filter nice'
+main = do
+  p <- puzzle
+  print $ length $ filter nice p
+  print $ length $ filter nice' p

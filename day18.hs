@@ -1,8 +1,7 @@
 import Control.Monad
 import Data.Matrix
-import System.IO
 
-puzzle = liftM lines (openFile "puzzles/day18.puzzle" ReadMode >>= hGetContents)
+puzzle = liftM lines $ readFile "puzzles/day18.puzzle"
 
 board p = fromLists $ map (map (== '#')) p
 
@@ -19,12 +18,22 @@ nextCell m p = alive (m ! p) where
 stickyCorners m p f = isCorner p || f m p where
     isCorner = flip elem [ (x, y) | x <- [1, nrows m], y <- [1, ncols m]]
 
-nextState m = fromList (nrows m) (ncols m) [ stickyCorners m (x, y) nextCell | x <- [1 .. nrows m], y <- [1 .. ncols m] ]
+nextState m = fromList (nrows m) (ncols m) [ nextCell m (x, y) | x <- [1 .. nrows m], y <- [1 .. ncols m] ]
+
+nextState' m = fromList (nrows m) (ncols m) [ stickyCorners m (x, y) nextCell | x <- [1 .. nrows m], y <- [1 .. ncols m] ]
+
 
 stickCorners m = fromList (nrows m) (ncols m) [ stickyCorners m (x, y) (!) | x <- [1 .. nrows m], y <- [1 .. ncols m] ]
 
 play = iterate nextState
+play' = iterate nextState'
 
 on m = countOn [ m ! (x, y) | x <- [1 .. nrows m], y <- [1 .. ncols m] ]
 
-main = puzzle >>= print . on . (!! 100) . play . stickCorners . board
+part1 = on . (!! 100) . play . board
+part2 = on . (!! 100) . play' . stickCorners . board
+
+main = do
+  p <- puzzle
+  print $ part1 p
+  print $ part2 p

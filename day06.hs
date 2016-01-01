@@ -1,23 +1,22 @@
 import Control.Applicative ((<|>))
 import Control.Monad
-import Data.List (isPrefixOf, null)
-import qualified Data.Map.Strict as M
+import Data.List (isPrefixOf)
 import Data.Maybe
+import qualified Data.Map.Strict as M
 import qualified Data.Set as S
-import System.IO
 
 type Lights = S.Set (Int, Int)
 
 data Op = On Lights | Off Lights | Toggle Lights deriving (Show)
 
-puzzle = liftM lines (openFile "puzzles/day06.puzzle" ReadMode >>= hGetContents)
+puzzle = liftM lines $ readFile "puzzles/day06.puzzle"
 
-splitOn x [] = []
+splitOn _ [] = []
 splitOn x xs = head : splitOn x thetail where
     (head, rest) = span (/= x) xs
     thetail = if null rest then [] else tail rest
 
-parse x = fromMaybe (error "No parse") (tryParse On "turn on" x <|> tryParse Off "turn off " x <|> tryParse Toggle "toggle " x)
+parse x = fromMaybe (error "No parse") (tryParse On "turn on " x <|> tryParse Off "turn off " x <|> tryParse Toggle "toggle " x)
 
 tryParse f p x = if p `isPrefixOf` x then Just $ f $ parseRest $ drop (length p) x else Nothing
 
@@ -43,10 +42,13 @@ run' = foldl eval M.empty where
     eval m (On s)     = foldl (\m' k -> M.insertWith (+) k 1 m') m (S.elems s)
     eval m (Off s)    = foldl (\m' k -> M.insertWith dim k 0 m') m (S.elems s)
     eval m (Toggle s) = foldl (\m' k -> M.insertWith (+) k 2 m') m (S.elems s)
-    dim _ = max 0 . (-) 1
+    dim _ = max 0 . subtract 1
 
-part1 = (400410 ==) . S.size . run . map parse
+part1 = S.size . run . map parse
 
-part2 = (15343601 ==) . M.foldl (+) 0 . run' . map parse
+part2 = M.foldl (+) 0 . run' . map parse
 
-main = puzzle >>= print . part2
+main = do
+  p <- puzzle
+  print $ part1 p
+  print $ part2 p
