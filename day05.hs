@@ -3,9 +3,8 @@
 import Control.Applicative
 import Control.Monad
 import Data.List (group)
-import System.IO
 
-puzzle = liftM lines (openFile "puzzles/day05.puzzle" ReadMode >>= hGetContents)
+puzzle = liftM lines (readFile "puzzles/day05.puzzle")
 
 foo fn fns a = foldl fn (head fns a) (map (\f -> f a) (tail fns))
 

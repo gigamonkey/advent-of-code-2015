@@ -1,7 +1,6 @@
 import Control.Monad
-import System.IO
 
-puzzle = liftM lines (openFile "puzzles/day02.puzzle" ReadMode >>= hGetContents)
+puzzle = liftM lines (readFile "puzzles/day02.puzzle")
 
 dims :: String -> (Int, Int, Int)
 dims d = (read l, read w, read h) where
